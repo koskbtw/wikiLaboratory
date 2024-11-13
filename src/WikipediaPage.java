@@ -1,6 +1,6 @@
 import java.io.IOException;
 
-public class UrlPe
+public class WikipediaPage
 {
     private static final String harvesting = "https://ru.wikipedia.org/w/index.php?curid=";
     public void showPage(int pageId) throws IOException {

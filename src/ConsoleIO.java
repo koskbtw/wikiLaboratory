@@ -10,7 +10,7 @@ public class ConsoleIO {
     public String readRequest() throws UnsupportedEncodingException {
         System.out.println("Введите запрос для поиска статей на Википедии: ");
         scanner = new Scanner(System.in);
-        return requestEncoder(scanner.nextLine());
+        return scanner.nextLine();
     }
 
     public String requestEncoder(String req) throws UnsupportedEncodingException {

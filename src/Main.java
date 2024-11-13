@@ -2,32 +2,45 @@ import java.io.UnsupportedEncodingException;
 import com.google.gson.JsonArray;
 import java.io.IOException;
 
+/*
+* Консольная программа для поиска в Википедии.
+*
+* @author Платонов Владислав 3353
+* @author Коновалов Максим 3353
+*
+*/
+
 public class Main {
     public static void main(String[] args) {
         ConsoleIO console = new ConsoleIO();
         WikipediaApi wikiApi = new WikipediaApi();
-        UrlPe urlParser = new UrlPe();
+        WikipediaPage wikiPage = new WikipediaPage();
         try {
-            String encodedRequest = console.readRequest();
-            if(wikiApi.checkConnection(encodedRequest))
+            String request = console.readRequest();
+            if (!(request.isEmpty()))
             {
-                JsonArray searchResults = wikiApi.getSearchResults(encodedRequest);
-
-                if (searchResults.isEmpty()) {
-                    console.displayMessage("Нет результатов для поиска.");
-                }
-                else
+                String encodedRequest = console.requestEncoder(request);
+                if(wikiApi.checkConnection(encodedRequest))
                 {
-                    console.displayResults(searchResults);
-                    int choice = console.readInt();
-                    if (choice > 0 && choice <= searchResults.size()) {
-                        int selectedPageId = wikiApi.getSelectedArticle(choice, searchResults);
-                        urlParser.showPage(selectedPageId);
-
-                    } else {
-                        console.displayMessage("Введён неверный номер, попробуйте снова");
+                    JsonArray searchResults = wikiApi.getSearchResults(encodedRequest);
+                    if (searchResults.isEmpty()) {
+                        console.displayMessage("Нет результатов для поиска.");
+                    }
+                    else
+                    {
+                        console.displayResults(searchResults);
+                        int choice = console.readInt();
+                        if (choice > 0 && choice <= searchResults.size()) {
+                            int selectedPageId = wikiApi.getSelectedArticle(choice, searchResults);
+                            wikiPage.showPage(selectedPageId);
+                        } else {
+                            console.displayMessage("Введён неверный номер, попробуйте снова");
+                        }
                     }
                 }
+            }
+            else {
+                console.displayMessage("Запрос не может быть пустым");
             }
         } catch (UnsupportedEncodingException e) {
             console.displayMessage("Ошибка кодирования URL: " + e.getMessage());
